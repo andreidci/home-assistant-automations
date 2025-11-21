@@ -1,8 +1,8 @@
 blueprint:
-  name: Time-based climate schedule (weekday)
+  name: Time-based climate schedule (Multi-Schedule)
   description: >
     Set target temperature of one or more climate entities at specific times
-    on selected weekdays. Useful for TRVs / Better Thermostat entities.
+    with support for 3 concurrent schedules.
   domain: automation
   input:
     climate_targets:
@@ -13,9 +13,27 @@ blueprint:
           domain: climate
           multiple: true
 
-    weekdays:
-      name: Weekdays
-      description: Days on which this schedule should run.
+    # -------------------------
+    # SCHEDULE 1
+    # -------------------------
+    s1_name:
+      name: "Schedule 1: Name"
+      description: Optional name for this schedule (e.g. 'Winter Weekdays').
+      default: ""
+      selector:
+        text: {}
+
+    s1_active:
+      name: "Schedule 1: Active"
+      description: Enable or disable Schedule 1.
+      default: true
+      selector:
+        boolean: {}
+
+    s1_weekdays:
+      name: "Schedule 1: Weekdays"
+      description: Days on which Schedule 1 should run.
+      default: []
       selector:
         select:
           multiple: true
@@ -35,9 +53,9 @@ blueprint:
             - value: sun
               label: Sunday
 
-    hvac_mode:
-      name: HVAC mode
-      description: HVAC mode to use when setting temperature.
+    s1_hvac_mode:
+      name: "Schedule 1: HVAC Mode"
+      description: HVAC mode for Schedule 1.
       default: heat
       selector:
         select:
@@ -49,16 +67,18 @@ blueprint:
             - dry
             - fan_only
 
-    time_1:
-      name: Time 1
-      description: First time of day to set a temperature.
+    s1_t1_enabled:
+      name: "S1 Time 1: Enabled"
+      default: true
+      selector:
+        boolean: {}
+    s1_t1_time:
+      name: "S1 Time 1"
       default: "05:00:00"
       selector:
         time: {}
-
-    temp_1:
-      name: Temperature 1
-      description: Temperature setpoint at Time 1.
+    s1_t1_temp:
+      name: "S1 Temp 1"
       default: 22
       selector:
         number:
@@ -68,16 +88,18 @@ blueprint:
           unit_of_measurement: "°C"
           mode: box
 
-    time_2:
-      name: Time 2
-      description: Second time of day to set a temperature.
+    s1_t2_enabled:
+      name: "S1 Time 2: Enabled"
+      default: true
+      selector:
+        boolean: {}
+    s1_t2_time:
+      name: "S1 Time 2"
       default: "09:00:00"
       selector:
         time: {}
-
-    temp_2:
-      name: Temperature 2
-      description: Temperature setpoint at Time 2.
+    s1_t2_temp:
+      name: "S1 Temp 2"
       default: 20
       selector:
         number:
@@ -87,16 +109,18 @@ blueprint:
           unit_of_measurement: "°C"
           mode: box
 
-    time_3:
-      name: Time 3
-      description: Third time of day to set a temperature.
-      default: "11:00:00"
+    s1_t3_enabled:
+      name: "S1 Time 3: Enabled"
+      default: true
+      selector:
+        boolean: {}
+    s1_t3_time:
+      name: "S1 Time 3"
+      default: "17:00:00"
       selector:
         time: {}
-
-    temp_3:
-      name: Temperature 3
-      description: Temperature setpoint at Time 3.
+    s1_t3_temp:
+      name: "S1 Temp 3"
       default: 22
       selector:
         number:
@@ -106,17 +130,295 @@ blueprint:
           unit_of_measurement: "°C"
           mode: box
 
-    time_4:
-      name: Time 4
-      description: Fourth time of day to set a temperature (e.g. night setback).
+    s1_t4_enabled:
+      name: "S1 Time 4: Enabled"
+      default: true
+      selector:
+        boolean: {}
+    s1_t4_time:
+      name: "S1 Time 4"
       default: "22:00:00"
       selector:
         time: {}
-
-    temp_4:
-      name: Temperature 4
-      description: Temperature setpoint at Time 4.
+    s1_t4_temp:
+      name: "S1 Temp 4"
       default: 20
+      selector:
+        number:
+          min: 5
+          max: 35
+          step: 0.5
+          unit_of_measurement: "°C"
+          mode: box
+
+    # -------------------------
+    # SCHEDULE 2
+    # -------------------------
+    s2_name:
+      name: "Schedule 2: Name"
+      description: Optional name for this schedule.
+      default: ""
+      selector:
+        text: {}
+
+    s2_active:
+      name: "Schedule 2: Active"
+      description: Enable or disable Schedule 2.
+      default: false
+      selector:
+        boolean: {}
+
+    s2_weekdays:
+      name: "Schedule 2: Weekdays"
+      description: Days on which Schedule 2 should run.
+      default: []
+      selector:
+        select:
+          multiple: true
+          options:
+            - value: mon
+              label: Monday
+            - value: tue
+              label: Tuesday
+            - value: wed
+              label: Wednesday
+            - value: thu
+              label: Thursday
+            - value: fri
+              label: Friday
+            - value: sat
+              label: Saturday
+            - value: sun
+              label: Sunday
+
+    s2_hvac_mode:
+      name: "Schedule 2: HVAC Mode"
+      description: HVAC mode for Schedule 2.
+      default: heat
+      selector:
+        select:
+          options:
+            - heat
+            - auto
+            - cool
+            - heat_cool
+            - dry
+            - fan_only
+
+    s2_t1_enabled:
+      name: "S2 Time 1: Enabled"
+      default: false
+      selector:
+        boolean: {}
+    s2_t1_time:
+      name: "S2 Time 1"
+      default: "06:00:00"
+      selector:
+        time: {}
+    s2_t1_temp:
+      name: "S2 Temp 1"
+      default: 21
+      selector:
+        number:
+          min: 5
+          max: 35
+          step: 0.5
+          unit_of_measurement: "°C"
+          mode: box
+
+    s2_t2_enabled:
+      name: "S2 Time 2: Enabled"
+      default: false
+      selector:
+        boolean: {}
+    s2_t2_time:
+      name: "S2 Time 2"
+      default: "08:00:00"
+      selector:
+        time: {}
+    s2_t2_temp:
+      name: "S2 Temp 2"
+      default: 19
+      selector:
+        number:
+          min: 5
+          max: 35
+          step: 0.5
+          unit_of_measurement: "°C"
+          mode: box
+
+    s2_t3_enabled:
+      name: "S2 Time 3: Enabled"
+      default: false
+      selector:
+        boolean: {}
+    s2_t3_time:
+      name: "S2 Time 3"
+      default: "16:00:00"
+      selector:
+        time: {}
+    s2_t3_temp:
+      name: "S2 Temp 3"
+      default: 21
+      selector:
+        number:
+          min: 5
+          max: 35
+          step: 0.5
+          unit_of_measurement: "°C"
+          mode: box
+
+    s2_t4_enabled:
+      name: "S2 Time 4: Enabled"
+      default: false
+      selector:
+        boolean: {}
+    s2_t4_time:
+      name: "S2 Time 4"
+      default: "23:00:00"
+      selector:
+        time: {}
+    s2_t4_temp:
+      name: "S2 Temp 4"
+      default: 19
+      selector:
+        number:
+          min: 5
+          max: 35
+          step: 0.5
+          unit_of_measurement: "°C"
+          mode: box
+
+    # -------------------------
+    # SCHEDULE 3
+    # -------------------------
+    s3_name:
+      name: "Schedule 3: Name"
+      description: Optional name for this schedule.
+      default: ""
+      selector:
+        text: {}
+
+    s3_active:
+      name: "Schedule 3: Active"
+      description: Enable or disable Schedule 3.
+      default: false
+      selector:
+        boolean: {}
+
+    s3_weekdays:
+      name: "Schedule 3: Weekdays"
+      description: Days on which Schedule 3 should run.
+      default: []
+      selector:
+        select:
+          multiple: true
+          options:
+            - value: mon
+              label: Monday
+            - value: tue
+              label: Tuesday
+            - value: wed
+              label: Wednesday
+            - value: thu
+              label: Thursday
+            - value: fri
+              label: Friday
+            - value: sat
+              label: Saturday
+            - value: sun
+              label: Sunday
+
+    s3_hvac_mode:
+      name: "Schedule 3: HVAC Mode"
+      description: HVAC mode for Schedule 3.
+      default: heat
+      selector:
+        select:
+          options:
+            - heat
+            - auto
+            - cool
+            - heat_cool
+            - dry
+            - fan_only
+
+    s3_t1_enabled:
+      name: "S3 Time 1: Enabled"
+      default: false
+      selector:
+        boolean: {}
+    s3_t1_time:
+      name: "S3 Time 1"
+      default: "07:00:00"
+      selector:
+        time: {}
+    s3_t1_temp:
+      name: "S3 Temp 1"
+      default: 20
+      selector:
+        number:
+          min: 5
+          max: 35
+          step: 0.5
+          unit_of_measurement: "°C"
+          mode: box
+
+    s3_t2_enabled:
+      name: "S3 Time 2: Enabled"
+      default: false
+      selector:
+        boolean: {}
+    s3_t2_time:
+      name: "S3 Time 2"
+      default: "10:00:00"
+      selector:
+        time: {}
+    s3_t2_temp:
+      name: "S3 Temp 2"
+      default: 18
+      selector:
+        number:
+          min: 5
+          max: 35
+          step: 0.5
+          unit_of_measurement: "°C"
+          mode: box
+
+    s3_t3_enabled:
+      name: "S3 Time 3: Enabled"
+      default: false
+      selector:
+        boolean: {}
+    s3_t3_time:
+      name: "S3 Time 3"
+      default: "18:00:00"
+      selector:
+        time: {}
+    s3_t3_temp:
+      name: "S3 Temp 3"
+      default: 20
+      selector:
+        number:
+          min: 5
+          max: 35
+          step: 0.5
+          unit_of_measurement: "°C"
+          mode: box
+
+    s3_t4_enabled:
+      name: "S3 Time 4: Enabled"
+      default: false
+      selector:
+        boolean: {}
+    s3_t4_time:
+      name: "S3 Time 4"
+      default: "23:00:00"
+      selector:
+        time: {}
+    s3_t4_temp:
+      name: "S3 Temp 4"
+      default: 18
       selector:
         number:
           min: 5
@@ -128,66 +430,257 @@ blueprint:
 mode: single
 
 triggers:
+  # Schedule 1
   - trigger: time
-    at: !input time_1
-    id: t1
+    at: !input s1_t1_time
+    id: s1_t1
   - trigger: time
-    at: !input time_2
-    id: t2
+    at: !input s1_t2_time
+    id: s1_t2
   - trigger: time
-    at: !input time_3
-    id: t3
+    at: !input s1_t3_time
+    id: s1_t3
   - trigger: time
-    at: !input time_4
-    id: t4
-
-conditions:
-  - condition: time
-    weekday: !input weekdays
+    at: !input s1_t4_time
+    id: s1_t4
+  # Schedule 2
+  - trigger: time
+    at: !input s2_t1_time
+    id: s2_t1
+  - trigger: time
+    at: !input s2_t2_time
+    id: s2_t2
+  - trigger: time
+    at: !input s2_t3_time
+    id: s2_t3
+  - trigger: time
+    at: !input s2_t4_time
+    id: s2_t4
+  # Schedule 3
+  - trigger: time
+    at: !input s3_t1_time
+    id: s3_t1
+  - trigger: time
+    at: !input s3_t2_time
+    id: s3_t2
+  - trigger: time
+    at: !input s3_t3_time
+    id: s3_t3
+  - trigger: time
+    at: !input s3_t4_time
+    id: s3_t4
 
 actions:
   - choose:
+      # -----------------------
+      # Schedule 1 Actions
+      # -----------------------
       - conditions:
+          - condition: trigger
+            id: s1_t1
           - condition: template
-            value_template: "{{ trigger.id == 't1' }}"
+            value_template: "{{ !input s1_active }}"
+          - condition: template
+            value_template: "{{ !input s1_t1_enabled }}"
+          - condition: time
+            weekday: !input s1_weekdays
         sequence:
           - action: climate.set_temperature
             target:
               entity_id: !input climate_targets
             data:
-              hvac_mode: !input hvac_mode
-              temperature: !input temp_1
+              hvac_mode: !input s1_hvac_mode
+              temperature: !input s1_t1_temp
 
       - conditions:
+          - condition: trigger
+            id: s1_t2
           - condition: template
-            value_template: "{{ trigger.id == 't2' }}"
+            value_template: "{{ !input s1_active }}"
+          - condition: template
+            value_template: "{{ !input s1_t2_enabled }}"
+          - condition: time
+            weekday: !input s1_weekdays
         sequence:
           - action: climate.set_temperature
             target:
               entity_id: !input climate_targets
             data:
-              hvac_mode: !input hvac_mode
-              temperature: !input temp_2
+              hvac_mode: !input s1_hvac_mode
+              temperature: !input s1_t2_temp
 
       - conditions:
+          - condition: trigger
+            id: s1_t3
           - condition: template
-            value_template: "{{ trigger.id == 't3' }}"
+            value_template: "{{ !input s1_active }}"
+          - condition: template
+            value_template: "{{ !input s1_t3_enabled }}"
+          - condition: time
+            weekday: !input s1_weekdays
         sequence:
           - action: climate.set_temperature
             target:
               entity_id: !input climate_targets
             data:
-              hvac_mode: !input hvac_mode
-              temperature: !input temp_3
+              hvac_mode: !input s1_hvac_mode
+              temperature: !input s1_t3_temp
 
       - conditions:
+          - condition: trigger
+            id: s1_t4
           - condition: template
-            value_template: "{{ trigger.id == 't4' }}"
+            value_template: "{{ !input s1_active }}"
+          - condition: template
+            value_template: "{{ !input s1_t4_enabled }}"
+          - condition: time
+            weekday: !input s1_weekdays
         sequence:
           - action: climate.set_temperature
             target:
               entity_id: !input climate_targets
             data:
-              hvac_mode: !input hvac_mode
-              temperature: !input temp_4
+              hvac_mode: !input s1_hvac_mode
+              temperature: !input s1_t4_temp
 
+      # -----------------------
+      # Schedule 2 Actions
+      # -----------------------
+      - conditions:
+          - condition: trigger
+            id: s2_t1
+          - condition: template
+            value_template: "{{ !input s2_active }}"
+          - condition: template
+            value_template: "{{ !input s2_t1_enabled }}"
+          - condition: time
+            weekday: !input s2_weekdays
+        sequence:
+          - action: climate.set_temperature
+            target:
+              entity_id: !input climate_targets
+            data:
+              hvac_mode: !input s2_hvac_mode
+              temperature: !input s2_t1_temp
+
+      - conditions:
+          - condition: trigger
+            id: s2_t2
+          - condition: template
+            value_template: "{{ !input s2_active }}"
+          - condition: template
+            value_template: "{{ !input s2_t2_enabled }}"
+          - condition: time
+            weekday: !input s2_weekdays
+        sequence:
+          - action: climate.set_temperature
+            target:
+              entity_id: !input climate_targets
+            data:
+              hvac_mode: !input s2_hvac_mode
+              temperature: !input s2_t2_temp
+
+      - conditions:
+          - condition: trigger
+            id: s2_t3
+          - condition: template
+            value_template: "{{ !input s2_active }}"
+          - condition: template
+            value_template: "{{ !input s2_t3_enabled }}"
+          - condition: time
+            weekday: !input s2_weekdays
+        sequence:
+          - action: climate.set_temperature
+            target:
+              entity_id: !input climate_targets
+            data:
+              hvac_mode: !input s2_hvac_mode
+              temperature: !input s2_t3_temp
+
+      - conditions:
+          - condition: trigger
+            id: s2_t4
+          - condition: template
+            value_template: "{{ !input s2_active }}"
+          - condition: template
+            value_template: "{{ !input s2_t4_enabled }}"
+          - condition: time
+            weekday: !input s2_weekdays
+        sequence:
+          - action: climate.set_temperature
+            target:
+              entity_id: !input climate_targets
+            data:
+              hvac_mode: !input s2_hvac_mode
+              temperature: !input s2_t4_temp
+
+      # -----------------------
+      # Schedule 3 Actions
+      # -----------------------
+      - conditions:
+          - condition: trigger
+            id: s3_t1
+          - condition: template
+            value_template: "{{ !input s3_active }}"
+          - condition: template
+            value_template: "{{ !input s3_t1_enabled }}"
+          - condition: time
+            weekday: !input s3_weekdays
+        sequence:
+          - action: climate.set_temperature
+            target:
+              entity_id: !input climate_targets
+            data:
+              hvac_mode: !input s3_hvac_mode
+              temperature: !input s3_t1_temp
+
+      - conditions:
+          - condition: trigger
+            id: s3_t2
+          - condition: template
+            value_template: "{{ !input s3_active }}"
+          - condition: template
+            value_template: "{{ !input s3_t2_enabled }}"
+          - condition: time
+            weekday: !input s3_weekdays
+        sequence:
+          - action: climate.set_temperature
+            target:
+              entity_id: !input climate_targets
+            data:
+              hvac_mode: !input s3_hvac_mode
+              temperature: !input s3_t2_temp
+
+      - conditions:
+          - condition: trigger
+            id: s3_t3
+          - condition: template
+            value_template: "{{ !input s3_active }}"
+          - condition: template
+            value_template: "{{ !input s3_t3_enabled }}"
+          - condition: time
+            weekday: !input s3_weekdays
+        sequence:
+          - action: climate.set_temperature
+            target:
+              entity_id: !input climate_targets
+            data:
+              hvac_mode: !input s3_hvac_mode
+              temperature: !input s3_t3_temp
+
+      - conditions:
+          - condition: trigger
+            id: s3_t4
+          - condition: template
+            value_template: "{{ !input s3_active }}"
+          - condition: template
+            value_template: "{{ !input s3_t4_enabled }}"
+          - condition: time
+            weekday: !input s3_weekdays
+        sequence:
+          - action: climate.set_temperature
+            target:
+              entity_id: !input climate_targets
+            data:
+              hvac_mode: !input s3_hvac_mode
+              temperature: !input s3_t4_temp
