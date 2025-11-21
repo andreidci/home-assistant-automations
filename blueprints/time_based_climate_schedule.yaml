@@ -1,0 +1,193 @@
+blueprint:
+  name: Time-based climate schedule (weekday)
+  description: >
+    Set target temperature of one or more climate entities at specific times
+    on selected weekdays. Useful for TRVs / Better Thermostat entities.
+  domain: automation
+  input:
+    climate_targets:
+      name: Climate entities
+      description: One or more climate entities to control (TRVs, Better Thermostat, etc.).
+      selector:
+        entity:
+          domain: climate
+          multiple: true
+
+    weekdays:
+      name: Weekdays
+      description: Days on which this schedule should run.
+      selector:
+        select:
+          multiple: true
+          options:
+            - value: mon
+              label: Monday
+            - value: tue
+              label: Tuesday
+            - value: wed
+              label: Wednesday
+            - value: thu
+              label: Thursday
+            - value: fri
+              label: Friday
+            - value: sat
+              label: Saturday
+            - value: sun
+              label: Sunday
+
+    hvac_mode:
+      name: HVAC mode
+      description: HVAC mode to use when setting temperature.
+      default: heat
+      selector:
+        select:
+          options:
+            - heat
+            - auto
+            - cool
+            - heat_cool
+            - dry
+            - fan_only
+
+    time_1:
+      name: Time 1
+      description: First time of day to set a temperature.
+      default: "05:00:00"
+      selector:
+        time: {}
+
+    temp_1:
+      name: Temperature 1
+      description: Temperature setpoint at Time 1.
+      default: 22
+      selector:
+        number:
+          min: 5
+          max: 35
+          step: 0.5
+          unit_of_measurement: "°C"
+          mode: box
+
+    time_2:
+      name: Time 2
+      description: Second time of day to set a temperature.
+      default: "09:00:00"
+      selector:
+        time: {}
+
+    temp_2:
+      name: Temperature 2
+      description: Temperature setpoint at Time 2.
+      default: 20
+      selector:
+        number:
+          min: 5
+          max: 35
+          step: 0.5
+          unit_of_measurement: "°C"
+          mode: box
+
+    time_3:
+      name: Time 3
+      description: Third time of day to set a temperature.
+      default: "11:00:00"
+      selector:
+        time: {}
+
+    temp_3:
+      name: Temperature 3
+      description: Temperature setpoint at Time 3.
+      default: 22
+      selector:
+        number:
+          min: 5
+          max: 35
+          step: 0.5
+          unit_of_measurement: "°C"
+          mode: box
+
+    time_4:
+      name: Time 4
+      description: Fourth time of day to set a temperature (e.g. night setback).
+      default: "22:00:00"
+      selector:
+        time: {}
+
+    temp_4:
+      name: Temperature 4
+      description: Temperature setpoint at Time 4.
+      default: 20
+      selector:
+        number:
+          min: 5
+          max: 35
+          step: 0.5
+          unit_of_measurement: "°C"
+          mode: box
+
+mode: single
+
+triggers:
+  - trigger: time
+    at: !input time_1
+    id: t1
+  - trigger: time
+    at: !input time_2
+    id: t2
+  - trigger: time
+    at: !input time_3
+    id: t3
+  - trigger: time
+    at: !input time_4
+    id: t4
+
+conditions:
+  - condition: time
+    weekday: !input weekdays
+
+actions:
+  - choose:
+      - conditions:
+          - condition: template
+            value_template: "{{ trigger.id == 't1' }}"
+        sequence:
+          - action: climate.set_temperature
+            target:
+              entity_id: !input climate_targets
+            data:
+              hvac_mode: !input hvac_mode
+              temperature: !input temp_1
+
+      - conditions:
+          - condition: template
+            value_template: "{{ trigger.id == 't2' }}"
+        sequence:
+          - action: climate.set_temperature
+            target:
+              entity_id: !input climate_targets
+            data:
+              hvac_mode: !input hvac_mode
+              temperature: !input temp_2
+
+      - conditions:
+          - condition: template
+            value_template: "{{ trigger.id == 't3' }}"
+        sequence:
+          - action: climate.set_temperature
+            target:
+              entity_id: !input climate_targets
+            data:
+              hvac_mode: !input hvac_mode
+              temperature: !input temp_3
+
+      - conditions:
+          - condition: template
+            value_template: "{{ trigger.id == 't4' }}"
+        sequence:
+          - action: climate.set_temperature
+            target:
+              entity_id: !input climate_targets
+            data:
+              hvac_mode: !input hvac_mode
+              temperature: !input temp_4
+
