@@ -471,6 +471,26 @@ triggers:
     id: s3_t4
 
 actions:
+  - variables:
+      # Schedule 1
+      s1_active: !input s1_active
+      s1_t1_enabled: !input s1_t1_enabled
+      s1_t2_enabled: !input s1_t2_enabled
+      s1_t3_enabled: !input s1_t3_enabled
+      s1_t4_enabled: !input s1_t4_enabled
+      # Schedule 2
+      s2_active: !input s2_active
+      s2_t1_enabled: !input s2_t1_enabled
+      s2_t2_enabled: !input s2_t2_enabled
+      s2_t3_enabled: !input s2_t3_enabled
+      s2_t4_enabled: !input s2_t4_enabled
+      # Schedule 3
+      s3_active: !input s3_active
+      s3_t1_enabled: !input s3_t1_enabled
+      s3_t2_enabled: !input s3_t2_enabled
+      s3_t3_enabled: !input s3_t3_enabled
+      s3_t4_enabled: !input s3_t4_enabled
+
   - choose:
       # -----------------------
       # Schedule 1 Actions
@@ -479,9 +499,9 @@ actions:
           - condition: trigger
             id: s1_t1
           - condition: template
-            value_template: "{{ !input s1_active }}"
+            value_template: "{{ s1_active }}"
           - condition: template
-            value_template: "{{ !input s1_t1_enabled }}"
+            value_template: "{{ s1_t1_enabled }}"
           - condition: time
             weekday: !input s1_weekdays
         sequence:
@@ -496,9 +516,9 @@ actions:
           - condition: trigger
             id: s1_t2
           - condition: template
-            value_template: "{{ !input s1_active }}"
+            value_template: "{{ s1_active }}"
           - condition: template
-            value_template: "{{ !input s1_t2_enabled }}"
+            value_template: "{{ s1_t2_enabled }}"
           - condition: time
             weekday: !input s1_weekdays
         sequence:
@@ -513,9 +533,9 @@ actions:
           - condition: trigger
             id: s1_t3
           - condition: template
-            value_template: "{{ !input s1_active }}"
+            value_template: "{{ s1_active }}"
           - condition: template
-            value_template: "{{ !input s1_t3_enabled }}"
+            value_template: "{{ s1_t3_enabled }}"
           - condition: time
             weekday: !input s1_weekdays
         sequence:
@@ -530,9 +550,9 @@ actions:
           - condition: trigger
             id: s1_t4
           - condition: template
-            value_template: "{{ !input s1_active }}"
+            value_template: "{{ s1_active }}"
           - condition: template
-            value_template: "{{ !input s1_t4_enabled }}"
+            value_template: "{{ s1_t4_enabled }}"
           - condition: time
             weekday: !input s1_weekdays
         sequence:
@@ -550,9 +570,9 @@ actions:
           - condition: trigger
             id: s2_t1
           - condition: template
-            value_template: "{{ !input s2_active }}"
+            value_template: "{{ s2_active }}"
           - condition: template
-            value_template: "{{ !input s2_t1_enabled }}"
+            value_template: "{{ s2_t1_enabled }}"
           - condition: time
             weekday: !input s2_weekdays
         sequence:
@@ -567,9 +587,9 @@ actions:
           - condition: trigger
             id: s2_t2
           - condition: template
-            value_template: "{{ !input s2_active }}"
+            value_template: "{{ s2_active }}"
           - condition: template
-            value_template: "{{ !input s2_t2_enabled }}"
+            value_template: "{{ s2_t2_enabled }}"
           - condition: time
             weekday: !input s2_weekdays
         sequence:
@@ -584,9 +604,9 @@ actions:
           - condition: trigger
             id: s2_t3
           - condition: template
-            value_template: "{{ !input s2_active }}"
+            value_template: "{{ s2_active }}"
           - condition: template
-            value_template: "{{ !input s2_t3_enabled }}"
+            value_template: "{{ s2_t3_enabled }}"
           - condition: time
             weekday: !input s2_weekdays
         sequence:
@@ -601,9 +621,9 @@ actions:
           - condition: trigger
             id: s2_t4
           - condition: template
-            value_template: "{{ !input s2_active }}"
+            value_template: "{{ s2_active }}"
           - condition: template
-            value_template: "{{ !input s2_t4_enabled }}"
+            value_template: "{{ s2_t4_enabled }}"
           - condition: time
             weekday: !input s2_weekdays
         sequence:
@@ -621,9 +641,9 @@ actions:
           - condition: trigger
             id: s3_t1
           - condition: template
-            value_template: "{{ !input s3_active }}"
+            value_template: "{{ s3_active }}"
           - condition: template
-            value_template: "{{ !input s3_t1_enabled }}"
+            value_template: "{{ s3_t1_enabled }}"
           - condition: time
             weekday: !input s3_weekdays
         sequence:
@@ -638,9 +658,9 @@ actions:
           - condition: trigger
             id: s3_t2
           - condition: template
-            value_template: "{{ !input s3_active }}"
+            value_template: "{{ s3_active }}"
           - condition: template
-            value_template: "{{ !input s3_t2_enabled }}"
+            value_template: "{{ s3_t2_enabled }}"
           - condition: time
             weekday: !input s3_weekdays
         sequence:
@@ -655,9 +675,9 @@ actions:
           - condition: trigger
             id: s3_t3
           - condition: template
-            value_template: "{{ !input s3_active }}"
+            value_template: "{{ s3_active }}"
           - condition: template
-            value_template: "{{ !input s3_t3_enabled }}"
+            value_template: "{{ s3_t3_enabled }}"
           - condition: time
             weekday: !input s3_weekdays
         sequence:
@@ -672,9 +692,9 @@ actions:
           - condition: trigger
             id: s3_t4
           - condition: template
-            value_template: "{{ !input s3_active }}"
+            value_template: "{{ s3_active }}"
           - condition: template
-            value_template: "{{ !input s3_t4_enabled }}"
+            value_template: "{{ s3_t4_enabled }}"
           - condition: time
             weekday: !input s3_weekdays
         sequence:
